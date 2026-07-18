@@ -99,7 +99,7 @@ Designed from the ground up for applications where security is **non-negotiable*
 ## 📦 Installation
 
 ```bash
-npm install zbiolock
+npm install zakirjarir/zbiolock
 npx cap sync
 ```
 
