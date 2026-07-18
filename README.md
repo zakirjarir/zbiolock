@@ -1,81 +1,111 @@
+<div align="center">
+
 # 🔐 ZBioLock
 
-**Enterprise-grade biometric authentication & secure token storage for Capacitor apps.**
+### Enterprise-grade biometric authentication & secure token storage for Capacitor apps
 
-[![npm version](https://img.shields.io/npm/v/zbiolock.svg)](https://www.npmjs.com/package/zbiolock)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Capacitor 7+](https://img.shields.io/badge/Capacitor-7%2B-3880ff)](https://capacitorjs.com)
-[![Platform: Android iOS Web](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-green)](https://capacitorjs.com)
-[![CI](https://github.com/zakirjarir/zbiolock/actions/workflows/ci.yml/badge.svg)](https://github.com/zakirjarir/zbiolock/actions)
-[![Status: Development](https://img.shields.io/badge/Status-In%20Development-orange)](https://github.com/zakirjarir/zbiolock)
+<p>
+  <img src="https://img.shields.io/npm/v/zbiolock.svg?style=for-the-badge&color=CB3837&logo=npm&logoColor=white" alt="npm version" />
+  <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License" />
+  <img src="https://img.shields.io/badge/Capacitor-7%2B-3880ff.svg?style=for-the-badge&logo=capacitor&logoColor=white" alt="Capacitor 7+" />
+</p>
+<p>
+  <img src="https://img.shields.io/badge/Android-3DDC84.svg?style=flat-square&logo=android&logoColor=white" alt="Android" />
+  <img src="https://img.shields.io/badge/iOS-000000.svg?style=flat-square&logo=apple&logoColor=white" alt="iOS" />
+  <img src="https://img.shields.io/badge/Web-safe%20fallback-6c757d.svg?style=flat-square" alt="Web" />
+  <img src="https://github.com/zakirjarir/zbiolock/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  <img src="https://img.shields.io/badge/Status-In%20Development-orange.svg?style=flat-square" alt="Status" />
+</p>
 
----
+**Hardware-backed biometric auth & token storage — built for banking, healthcare & government apps.**
+
+</div>
+
+<br/>
 
 > [!WARNING]
-> **🚧 This plugin is currently in active development and is NOT yet production-ready.**
+> ### 🚧 Active Development — Not Yet Production-Ready
+> - The API may change without notice between versions
+> - Not yet verified on physical devices across all Android/iOS versions
+> - **Not recommended** for live/production applications at this stage
+> - Breaking changes may occur before the `v1.0.0` stable release
 >
-> - The API may change without notice between versions.
-> - It has not yet been tested on physical devices across all Android/iOS versions.
-> - It is **not recommended** for use in live/production applications at this stage.
-> - Breaking changes may occur before the `v1.0.0` stable release.
->
-> **Use in production at your own risk.** Watch the repository for stable release announcements.
+> **Use in production at your own risk.** ⭐ Watch this repo for stable release announcements.
 
----
+<br/>
 
+## ✨ Overview
 
-ZBioLock provides **biometric authentication** (fingerprint, Face ID, iris, device PIN) and **hardware-backed secure token storage** via **Android Keystore + EncryptedSharedPreferences** and **iOS Keychain Services**.
+ZBioLock provides **biometric authentication** (fingerprint, Face ID, iris, device PIN) and **hardware-backed secure token storage**, powered by:
 
-Designed for **banking**, **healthcare**, and **government** applications where security is non-negotiable.
+| Platform | Storage Backend |
+|:--|:--|
+| 🤖 **Android** | Android Keystore + `EncryptedSharedPreferences` |
+| 🍎 **iOS** | Keychain Services (Secure Enclave) |
 
----
+Designed from the ground up for applications where security is **non-negotiable**.
 
-## Features
+<br/>
 
-| Feature | Android | iOS | Web |
-|---|---|---|---|
+## 🧩 Feature Matrix
+
+| Feature | 🤖 Android | 🍎 iOS | 🌐 Web |
+|:--|:--:|:--:|:--:|
 | Fingerprint | ✅ | ✅ | — |
 | Face Unlock / Face ID | ✅ | ✅ | — |
-| Iris Authentication | ✅ (Android 10+) | ✅ (Apple Vision Pro) | — |
+| Iris Authentication | ✅ `Android 10+` | ✅ `Vision Pro` | — |
 | Device PIN / Pattern / Password | ✅ | ✅ | — |
-| Android Keystore token storage | ✅ | — | — |
-| iOS Keychain token storage | — | ✅ | — |
+| Hardware-backed token storage | ✅ Keystore | ✅ Keychain | — |
 | Secure fallback behavior | ✅ | ✅ | ✅ |
 
----
+<br/>
 
-## Table of Contents
+## 📖 Table of Contents
 
-- [Installation](#installation)
-- [Capacitor Sync](#capacitor-sync)
-- [Android Setup](#android-setup)
-- [iOS Setup](#ios-setup)
-- [API Reference](#api-reference)
-- [Usage Examples](#usage-examples)
-  - [Ionic / Angular](#ionic--angular)
-  - [Ionic / Vue](#ionic--vue)
-  - [Ionic / React](#ionic--react)
-  - [Vanilla Capacitor](#vanilla-capacitor)
-- [Biometric Types](#biometric-types)
-- [Error Codes](#error-codes)
-- [Security Notes](#security-notes)
-- [Troubleshooting](#troubleshooting)
-- [FAQ](#faq)
-- [Publishing](#publishing)
-- [License](#license)
+<table>
+<tr>
+<td valign="top" width="33%">
 
----
+**Getting Started**
+- [Installation](#-installation)
+- [Capacitor Sync](#-capacitor-sync)
+- [Android Setup](#-android-setup)
+- [iOS Setup](#-ios-setup)
 
-## Installation
+</td>
+<td valign="top" width="33%">
+
+**Using the Plugin**
+- [API Reference](#-api-reference)
+- [Usage Examples](#-usage-examples)
+- [Biometric Types](#-biometric-types)
+- [Error Codes](#-error-codes)
+
+</td>
+<td valign="top" width="33%">
+
+**Reference**
+- [Security Notes](#-security-notes)
+- [Troubleshooting](#-troubleshooting)
+- [FAQ](#-faq)
+- [Changelog](#-changelog)
+
+</td>
+</tr>
+</table>
+
+<br/>
+
+## 📦 Installation
 
 ```bash
 npm install zbiolock
 npx cap sync
 ```
 
----
+<br/>
 
-## Capacitor Sync
+## 🔄 Capacitor Sync
 
 After installing, always run:
 
@@ -85,11 +115,11 @@ npx cap sync
 
 This copies the native plugin code into your Android and iOS projects.
 
----
+<br/>
 
-## Android Setup
+## 🤖 Android Setup
 
-### 1. Register the Plugin
+### 1️⃣ Register the Plugin
 
 In your app's `MainActivity.kt`:
 
@@ -104,18 +134,12 @@ class MainActivity : BridgeActivity() {
 }
 ```
 
----
-
-### 2. AndroidManifest.xml — Required Changes
+### 2️⃣ AndroidManifest.xml — Required Changes
 
 > [!IMPORTANT]
-> You **must** add the `USE_BIOMETRIC` permission to your **app's** `AndroidManifest.xml`.
-> Although the plugin's own AAR manifest declares this permission, Android Gradle sometimes
-> does not auto-merge it reliably in all project configurations. Adding it explicitly is
-> always safe and is the recommended practice.
+> You **must** add the `USE_BIOMETRIC` permission to your **app's** `AndroidManifest.xml`. Although the plugin's own AAR manifest declares this permission, Android Gradle sometimes does not auto-merge it reliably across all project configurations. Adding it explicitly is always safe and is the recommended practice.
 
-Open `android/app/src/main/AndroidManifest.xml` in your Capacitor/Ionic project and add
-the following entries **inside the `<manifest>` tag, outside the `<application>` block**:
+Open `android/app/src/main/AndroidManifest.xml` and add the following **inside the `<manifest>` tag, outside the `<application>` block**:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -125,35 +149,25 @@ the following entries **inside the `<manifest>` tag, outside the `<application>`
         <!-- your existing application content -->
     </application>
 
-    <!-- ─────────────────────────────────────────────────────────── -->
-    <!-- ZBioLock — Biometric Permissions                            -->
-    <!-- ─────────────────────────────────────────────────────────── -->
+    <!-- ─────────────────────────────────────────────── -->
+    <!--  ZBioLock — Biometric Permissions                -->
+    <!-- ─────────────────────────────────────────────── -->
 
     <!--
         REQUIRED: Grants access to the BiometricPrompt API (Android 9+, API 28+).
-        On devices running Android 8 or below, the system automatically
-        down-grades this to USE_FINGERPRINT — no extra work needed.
+        On Android 8 or below, the system automatically down-grades this
+        to USE_FINGERPRINT — no extra work needed.
     -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <!--
-        OPTIONAL — Hardware feature hints.
-        These tell the Play Store which sensor types your app can use.
-        android:required="false" ensures the app is still installable on devices
-        that lack a specific sensor — ZBioLock gracefully reports them as
-        unavailable at runtime rather than blocking installation.
+        OPTIONAL — Hardware feature hints for the Play Store.
+        android:required="false" keeps the app installable on devices
+        without a given sensor; ZBioLock reports it as unavailable at runtime.
     -->
-    <uses-feature
-        android:name="android.hardware.fingerprint"
-        android:required="false" />
-
-    <uses-feature
-        android:name="android.hardware.biometrics.face"
-        android:required="false" />
-
-    <uses-feature
-        android:name="android.hardware.biometrics.iris"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+    <uses-feature android:name="android.hardware.biometrics.face" android:required="false" />
+    <uses-feature android:name="android.hardware.biometrics.iris" android:required="false" />
 
 </manifest>
 ```
@@ -161,41 +175,34 @@ the following entries **inside the `<manifest>` tag, outside the `<application>`
 #### What each entry does
 
 | Entry | Required? | Purpose |
-|---|---|---|
-| `USE_BIOMETRIC` | **Yes** | Grants runtime access to `BiometricPrompt` |
+|:--|:--:|:--|
+| `USE_BIOMETRIC` | ✅ **Yes** | Grants runtime access to `BiometricPrompt` |
 | `android.hardware.fingerprint` | No | Hints fingerprint usage to Play Store |
 | `android.hardware.biometrics.face` | No | Hints Face Unlock usage to Play Store |
 | `android.hardware.biometrics.iris` | No | Hints iris scanner usage to Play Store |
 
 > [!NOTE]
-> The `USE_BIOMETRIC` permission is a **normal** permission — it does not require a
-> runtime permission dialog shown to the user. The OS controls access entirely through
-> the biometric prompt itself.
+> `USE_BIOMETRIC` is a **normal** permission — it never triggers a runtime permission dialog. Access is controlled entirely through the biometric prompt itself.
 
----
+### 3️⃣ Minimum SDK
 
-### 3. Minimum SDK
-
-ZBioLock requires `minSdkVersion 24` (Android 7.0). Verify in
-`android/variables.gradle` or `android/app/build.gradle`:
+ZBioLock requires `minSdkVersion 24` (Android 7.0). Verify in `android/variables.gradle` or `android/app/build.gradle`:
 
 ```gradle
 minSdkVersion = 24
 ```
 
-Biometric features behave optimally on **Android 9+ (API 28+)**.
+> Biometric features behave optimally on **Android 9+ (API 28+)**.
 
----
+### 4️⃣ Manifest Merge Conflicts
 
-### 4. Troubleshooting — Manifest Merge Conflicts
-
-If you see a build error like:
+If you hit a build error like:
 
 ```
 Manifest merger failed: Attribute ... from AndroidManifest.xml is also present...
 ```
 
-Add a `tools:replace` attribute to resolve the conflict:
+Add a `tools:replace` attribute:
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -208,22 +215,23 @@ Add a `tools:replace` attribute to resolve the conflict:
 </manifest>
 ```
 
+<br/>
 
+## 🍎 iOS Setup
 
-## iOS Setup
+### 1️⃣ Face ID Usage Description — Required
 
-### 1. Face ID Usage Description (Required)
-
-Add to your app's `ios/App/App/Info.plist`:
+Add to `ios/App/App/Info.plist`:
 
 ```xml
 <key>NSFaceIDUsageDescription</key>
 <string>We use Face ID to securely authenticate you and protect your account.</string>
 ```
 
-> ⚠️ **Without this key, the app will crash on Face ID devices.**
+> [!CAUTION]
+> **Without this key, the app will crash on Face ID devices.**
 
-### 2. Minimum Deployment Target
+### 2️⃣ Minimum Deployment Target
 
 ZBioLock targets **iOS 15+**. Verify your Podfile:
 
@@ -231,22 +239,21 @@ ZBioLock targets **iOS 15+**. Verify your Podfile:
 platform :ios, '15.0'
 ```
 
----
+<br/>
 
-## API Reference
+## 🛠 API Reference
 
-### `isAvailable()`
-
-Check whether biometric or device-credential authentication is available.
+<details open>
+<summary><code>isAvailable()</code> — check biometric / device-credential availability</summary>
 
 ```typescript
 const result = await ZBioLock.isAvailable();
 // { isAvailable: true, biometricType: 'face' }
 ```
+</details>
 
-### `authenticate(options?)`
-
-Show the OS biometric prompt.
+<details open>
+<summary><code>authenticate(options?)</code> — show the OS biometric prompt</summary>
 
 ```typescript
 const result = await ZBioLock.authenticate({
@@ -260,66 +267,68 @@ const result = await ZBioLock.authenticate({
 ```
 
 | Option | Type | Default | Description |
-|---|---|---|---|
+|:--|:--|:--|:--|
 | `title` | `string` | `"Biometric Authentication"` | Prompt title |
 | `subtitle` | `string` | — | Subtitle text |
 | `description` | `string` | — | Body description |
 | `allowDeviceCredential` | `boolean` | `false` | Allow PIN/pattern/password |
 | `cancelText` | `string` | `"Cancel"` | Negative button text (Android) |
+</details>
 
-### `saveToken(options)`
-
-Securely store a token string.
+<details>
+<summary><code>saveToken(options)</code> — securely store a token string</summary>
 
 ```typescript
 await ZBioLock.saveToken({ key: 'access_token', token: myJWT });
 ```
+</details>
 
-### `getToken(options)`
-
-Retrieve a stored token. Returns `null` if not found.
+<details>
+<summary><code>getToken(options)</code> — retrieve a stored token (returns <code>null</code> if not found)</summary>
 
 ```typescript
 const { token } = await ZBioLock.getToken({ key: 'access_token' });
 ```
+</details>
 
-### `deleteToken(options)`
-
-Delete a single stored token.
+<details>
+<summary><code>deleteToken(options)</code> — delete a single stored token</summary>
 
 ```typescript
 await ZBioLock.deleteToken({ key: 'access_token' });
 ```
+</details>
 
-### `clear()`
-
-Delete **all** tokens stored by this plugin. Call on user logout.
+<details>
+<summary><code>clear()</code> — delete <b>all</b> stored tokens (call on logout)</summary>
 
 ```typescript
 await ZBioLock.clear();
 ```
+</details>
 
-### `getBiometricType()`
-
-Return the primary biometric type available.
+<details>
+<summary><code>getBiometricType()</code> — return the primary biometric type available</summary>
 
 ```typescript
 const { biometricType } = await ZBioLock.getBiometricType();
 ```
+</details>
 
-### `isBiometricEnrolled()`
-
-Return whether the user has enrolled at least one biometric credential.
+<details>
+<summary><code>isBiometricEnrolled()</code> — whether the user has enrolled a biometric credential</summary>
 
 ```typescript
 const { enrolled } = await ZBioLock.isBiometricEnrolled();
 ```
+</details>
 
----
+<br/>
 
-## Usage Examples
+## 💡 Usage Examples
 
-### Ionic / Angular
+<details open>
+<summary><b>Ionic / Angular</b></summary>
 
 ```typescript
 // auth.service.ts
@@ -348,8 +357,10 @@ export class AuthService {
   }
 }
 ```
+</details>
 
-### Ionic / Vue
+<details>
+<summary><b>Ionic / Vue</b></summary>
 
 ```typescript
 // useAuth.ts
@@ -372,8 +383,10 @@ export function useAuth() {
   return { authenticate, storeToken, readToken, logout };
 }
 ```
+</details>
 
-### Ionic / React
+<details>
+<summary><b>Ionic / React</b></summary>
 
 ```typescript
 // useBiometric.ts
@@ -393,8 +406,10 @@ export function useBiometric() {
   return { login };
 }
 ```
+</details>
 
-### Vanilla Capacitor
+<details>
+<summary><b>Vanilla Capacitor</b></summary>
 
 ```typescript
 import { ZBioLock } from 'zbiolock';
@@ -416,13 +431,14 @@ async function run() {
   }
 }
 ```
+</details>
 
----
+<br/>
 
-## Biometric Types
+## 🧬 Biometric Types
 
 | Value | Description |
-|---|---|
+|:--|:--|
 | `fingerprint` | Fingerprint / Touch ID |
 | `face` | Android Face Unlock / Apple Face ID |
 | `iris` | Iris scanner |
@@ -430,12 +446,12 @@ async function run() {
 | `unknown` | Hardware detected but type unrecognized |
 | `none` | No authentication available |
 
----
+<br/>
 
-## Error Codes
+## ⚠️ Error Codes
 
 | Code | Meaning |
-|---|---|
+|:--|:--|
 | `BIOMETRIC_NOT_AVAILABLE` | Hardware unavailable or disabled |
 | `BIOMETRIC_NOT_ENROLLED` | No biometrics enrolled on device |
 | `AUTHENTICATION_FAILED` | Attempt failed (wrong finger, etc.) |
@@ -461,53 +477,57 @@ try {
 }
 ```
 
----
+<br/>
 
-## Security Notes
+## 🔒 Security Notes
 
 > [!IMPORTANT]
 > ZBioLock **never** stores tokens in `localStorage`, `sessionStorage`, `SharedPreferences`, or `UserDefaults`. All storage is hardware-backed and encrypted.
 
 | Platform | Storage Mechanism | Encryption | Backup Protected |
-|---|---|---|---|
-| Android | `EncryptedSharedPreferences` | AES-256-GCM (Android Keystore) | ✅ Yes |
-| iOS | Keychain Services | Hardware-backed AES (Secure Enclave) | ✅ `ThisDeviceOnly` |
-| Web | ❌ Not available | ❌ | — |
+|:--|:--|:--|:--:|
+| 🤖 Android | `EncryptedSharedPreferences` | AES-256-GCM (Android Keystore) | ✅ Yes |
+| 🍎 iOS | Keychain Services | Hardware-backed AES (Secure Enclave) | ✅ `ThisDeviceOnly` |
+| 🌐 Web | ❌ Not available | ❌ | — |
 
-### Security Best Practices
+### ✅ Best Practices
 
-- ✅ Always call `ZBioLock.clear()` on **logout** — this wipes all stored tokens from hardware storage.
-- ✅ Tokens are **device-bound** — they cannot be extracted, copied, or migrated to another device.
-- ✅ On iOS, `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` means tokens are inaccessible before the first device unlock after reboot (cold-boot protection).
-- ✅ On Android, the Keystore master key is tied to the **app signing certificate** — repackaged APKs cannot access your tokens.
-- ✅ The plugin does **not** transmit any data over the network. Everything stays on-device.
-- ⚠️ Do **not** log or print token values in production code — treat them as secrets.
-- ⚠️ Do **not** store tokens in React/Vue/Angular component state beyond what is immediately needed.
+- Always call `ZBioLock.clear()` on **logout** — wipes all stored tokens from hardware storage
+- Tokens are **device-bound** — they cannot be extracted, copied, or migrated to another device
+- iOS: `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` keeps tokens inaccessible before the first unlock after reboot (cold-boot protection)
+- Android: the Keystore master key is tied to the **app signing certificate** — repackaged APKs cannot access your tokens
+- The plugin **never transmits data over the network** — everything stays on-device
 
----
+### 🚫 Avoid
 
-## Troubleshooting
+- Logging or printing token values in production code — treat them as secrets
+- Storing tokens in React/Vue/Angular component state beyond what's immediately needed
 
-### Android: `BIOMETRIC_NOT_AVAILABLE` — hardware error
+<br/>
+
+## 🩺 Troubleshooting
+
+<details>
+<summary><b>Android — <code>BIOMETRIC_NOT_AVAILABLE</code></b> hardware error</summary>
 
 **Symptoms:** `isAvailable()` returns `false`, or `authenticate()` throws `BIOMETRIC_NOT_AVAILABLE`.
 
 **Causes & Fixes:**
-- The biometric sensor is temporarily unavailable (overheated, covered, reboot needed). Ask the user to retry.
-- No biometric hardware is present on the device — expected on low-end devices. Use `allowDeviceCredential: true` as a fallback.
-- The device is in a locked-down state (e.g., enterprise MDM policy). No workaround.
+- Sensor temporarily unavailable (overheated, covered, reboot needed) — ask the user to retry
+- No biometric hardware present — expected on low-end devices; use `allowDeviceCredential: true` as a fallback
+- Device is in a locked-down state (e.g., enterprise MDM policy) — no workaround
+</details>
 
----
-
-### Android: `AUTHENTICATION_LOCKED`
+<details>
+<summary><b>Android — <code>AUTHENTICATION_LOCKED</code></b></summary>
 
 **Symptoms:** `authenticate()` throws `AUTHENTICATION_LOCKED`.
 
-**Fix:** The user made too many failed attempts. The prompt is locked for a period (usually 30 seconds for soft lock, or until reboot for permanent lock). Show a user-friendly message and retry after the timeout.
+**Fix:** Too many failed attempts. The prompt locks for a period (usually 30s for soft lock, or until reboot for permanent lock). Show a friendly message and retry after the timeout.
+</details>
 
----
-
-### Android: Build fails — `Could not find org.jetbrains.kotlin:kotlin-gradle-plugin`
+<details>
+<summary><b>Android — build fails:</b> <code>Could not find org.jetbrains.kotlin:kotlin-gradle-plugin</code></summary>
 
 **Fix:** Add the Kotlin classpath to your **root-level** `build.gradle` (not `android/app/build.gradle`):
 
@@ -518,12 +538,10 @@ buildscript {
     }
 }
 ```
+</details>
 
----
-
-### Android: `Manifest merger failed`
-
-**Symptoms:**
+<details>
+<summary><b>Android — <code>Manifest merger failed</code></b></summary>
 
 ```
 Manifest merger failed: Attribute uses-permission#android.permission.USE_BIOMETRIC
@@ -541,20 +559,20 @@ Manifest merger failed: Attribute uses-permission#android.permission.USE_BIOMETR
 
 </manifest>
 ```
+</details>
 
----
-
-### Android: `EncryptedSharedPreferences` crashes after app reinstall / key change
+<details>
+<summary><b>Android — <code>EncryptedSharedPreferences</code> crashes after reinstall / key change</b></summary>
 
 **Symptoms:** `UNKNOWN_ERROR` on `saveToken()` or `getToken()` after reinstalling the app or clearing app data.
 
 **Cause:** The Android Keystore key was invalidated (e.g., new fingerprint enrolled, device reset).
 
 **Fix:** ZBioLock automatically recovers by deleting and recreating the encrypted prefs file. If it still fails, call `ZBioLock.clear()` to wipe corrupted state, then re-save tokens.
+</details>
 
----
-
-### iOS: App crashes immediately on Face ID device
+<details>
+<summary><b>iOS — app crashes immediately on Face ID device</b></summary>
 
 **Fix:** Add `NSFaceIDUsageDescription` to `ios/App/App/Info.plist`:
 
@@ -563,31 +581,31 @@ Manifest merger failed: Attribute uses-permission#android.permission.USE_BIOMETR
 <string>We use Face ID to securely verify your identity.</string>
 ```
 
-See the full [iOS Setup](#ios-setup) section.
+See the full [iOS Setup](#-ios-setup) section.
+</details>
 
----
-
-### iOS: `biometryNotAvailable` on Simulator
+<details>
+<summary><b>iOS — <code>biometryNotAvailable</code> on Simulator</b></summary>
 
 **Fix:** In Xcode Simulator, go to:
-- **Face ID**: `Features → Face ID → Enrolled`
-- **Touch ID**: `Features → Touch ID → Enrolled`
+- **Face ID:** `Features → Face ID → Enrolled`
+- **Touch ID:** `Features → Touch ID → Enrolled`
 
 Then trigger a matching biometric: `Features → Face ID → Matching Face`.
+</details>
 
----
-
-### iOS: `AUTHENTICATION_CANCELED` immediately (no prompt shown)
+<details>
+<summary><b>iOS — <code>AUTHENTICATION_CANCELED</code> immediately (no prompt shown)</b></summary>
 
 **Cause:** The `LAContext` was invalidated before `evaluatePolicy` ran — usually caused by calling `authenticate()` from a background thread.
 
-**Fix:** This is handled internally by ZBioLock — `evaluatePolicy` always runs on `DispatchQueue.main`. If you are wrapping the call in a custom background task, ensure you `await` it on the main thread in your app code.
+**Fix:** Handled internally by ZBioLock — `evaluatePolicy` always runs on `DispatchQueue.main`. If wrapping the call in a custom background task, ensure you `await` it on the main thread in your app code.
+</details>
 
----
+<details>
+<summary><b>Web — <code>DEVICE_NOT_SUPPORTED</code> on every call</b></summary>
 
-### Web: `DEVICE_NOT_SUPPORTED` on every call
-
-**Expected behaviour.** The web platform has no biometric hardware or secure storage APIs. ZBioLock returns safe fallbacks:
+**Expected behavior.** The web platform has no biometric hardware or secure storage APIs. ZBioLock returns safe fallbacks:
 
 ```typescript
 const { isAvailable } = await ZBioLock.isAvailable();
@@ -597,45 +615,59 @@ await ZBioLock.authenticate(); // throws DEVICE_NOT_SUPPORTED — handle gracefu
 ```
 
 Always check `isAvailable` before calling `authenticate()` in cross-platform code.
+</details>
 
----
+<br/>
 
-## FAQ
+## ❓ FAQ
 
-**Q: Can I use ZBioLock in a banking or fintech app?**
+<details>
+<summary><b>Can I use ZBioLock in a banking or fintech app?</b></summary>
+<br/>
+
 Yes. Token storage uses Android Keystore (AES-256-GCM) and iOS Secure Enclave / Keychain, satisfying:
 - OWASP MASVS L2 (credential storage requirements)
 - PCI-DSS requirement 8 (strong authentication)
 - FIDO2 / biometric authentication guidelines
+</details>
 
----
+<details>
+<summary><b>Does it support Capacitor 7?</b></summary>
+<br/>
 
-**Q: Does it support Capacitor 7?**
 Yes. The peer dependency is `>=7.0.0`. Both Capacitor 7 and Capacitor 8 are supported.
+</details>
 
----
+<details>
+<summary><b>The user has no biometrics enrolled — what happens?</b></summary>
+<br/>
 
-**Q: The user has no biometrics enrolled — what happens?**
-- `isAvailable()` returns `{ isAvailable: false, biometricType: 'none' }` when no biometrics AND no device credential are available.
-- If you pass `allowDeviceCredential: true`, `isAvailable()` returns `true` as long as the device has a PIN/pattern/password set.
-- `isBiometricEnrolled()` always accurately reflects whether a biometric (fingerprint/face/iris) is enrolled — independently of device credential.
+- `isAvailable()` returns `{ isAvailable: false, biometricType: 'none' }` when no biometrics **and** no device credential are available
+- If you pass `allowDeviceCredential: true`, `isAvailable()` returns `true` as long as the device has a PIN/pattern/password set
+- `isBiometricEnrolled()` always accurately reflects whether a biometric is enrolled — independently of device credential
+</details>
 
----
+<details>
+<summary><b>Can another app on the device read my stored tokens?</b></summary>
+<br/>
 
-**Q: Can another app on the device read my stored tokens?**
-No. On Android, `EncryptedSharedPreferences` is private to your app's UID and the Keystore key is bound to your app's signing certificate. On iOS, Keychain items are sandboxed to your app's bundle ID by default (no `kSecAttrAccessGroup` shared group is set). Neither platform exposes tokens to other apps.
+No. On Android, `EncryptedSharedPreferences` is private to your app's UID and the Keystore key is bound to your app's signing certificate. On iOS, Keychain items are sandboxed to your app's bundle ID by default (no shared `kSecAttrAccessGroup` is set). Neither platform exposes tokens to other apps.
+</details>
 
----
+<details>
+<summary><b>What happens to tokens when the user adds a new fingerprint?</b></summary>
+<br/>
 
-**Q: What happens to tokens when the user adds a new fingerprint?**
-On Android, adding a new biometric **invalidates** existing Keystore keys if they were created with `setInvalidatedByBiometricEnrollment(true)`. ZBioLock uses `EncryptedSharedPreferences` with a standard `MasterKey` which is **not** invalidated on new enrollment by default — so existing tokens remain accessible.
+**Android:** adding a new biometric invalidates existing Keystore keys only if created with `setInvalidatedByBiometricEnrollment(true)`. ZBioLock uses `EncryptedSharedPreferences` with a standard `MasterKey`, which is **not** invalidated on new enrollment by default — existing tokens remain accessible.
 
-On iOS, adding a new Touch ID / Face ID does **not** invalidate existing Keychain items.
+**iOS:** adding a new Touch ID / Face ID does **not** invalidate existing Keychain items.
+</details>
 
----
+<details>
+<summary><b>Can I use multiple token keys simultaneously?</b></summary>
+<br/>
 
-**Q: Can I use multiple token keys simultaneously?**
-Yes. `saveToken` / `getToken` / `deleteToken` all accept a `key` parameter. Use descriptive keys:
+Yes. `saveToken` / `getToken` / `deleteToken` all accept a `key` parameter:
 
 ```typescript
 await ZBioLock.saveToken({ key: 'access_token',  token: accessJWT });
@@ -645,27 +677,34 @@ await ZBioLock.saveToken({ key: 'session_id',    token: sessionId });
 // On logout — wipe them all at once:
 await ZBioLock.clear();
 ```
+</details>
 
----
+<details>
+<summary><b>Can I migrate tokens to a new phone?</b></summary>
+<br/>
 
-**Q: Can I migrate tokens to a new phone?**
 No — by design. Tokens are bound to the device's hardware security module. Users must log in again on a new device and re-save their tokens. This is a **security feature**, not a limitation.
+</details>
 
----
+<details>
+<summary><b>Does ZBioLock work with Ionic's <code>@capacitor-community/biometric-auth</code>?</b></summary>
+<br/>
 
-**Q: Does ZBioLock work with Ionic's `@capacitor-community/biometric-auth`?**
-Yes — ZBioLock is a fully independent plugin and does not conflict with other biometric plugins. You can use them side-by-side if needed, though ZBioLock covers all features of that plugin and adds secure token storage.
+Yes — ZBioLock is fully independent and does not conflict with other biometric plugins. You can use them side-by-side, though ZBioLock covers all features of that plugin plus secure token storage.
+</details>
 
----
+<details>
+<summary><b>Is there a React Native version?</b></summary>
+<br/>
 
-**Q: Is there a React Native version?**
 Not at this time. ZBioLock is a Capacitor-native plugin. A React Native port is not planned, but community contributions are welcome.
+</details>
 
----
+<br/>
 
-## Changelog
+## 📝 Changelog
 
-### v0.0.1 — Initial Release
+### `v0.0.1` — Initial Release
 
 - ✅ `isAvailable()` — checks biometric + device credential availability
 - ✅ `authenticate()` — BiometricPrompt (Android) / LAContext (iOS) with full option support
@@ -678,17 +717,17 @@ Not at this time. ZBioLock is a Capacitor-native plugin. A React Native port is 
 - ✅ Capacitor 7 + 8 compatible
 - ✅ GitHub Actions CI (TypeScript + Android + iOS)
 
----
+<br/>
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting a pull request.
 
 For security vulnerabilities, please use [GitHub Security Advisories](https://github.com/zakirjarir/zbiolock/security/advisories) instead of opening a public issue.
 
----
+<br/>
 
-## Publishing
+## 🚀 Publishing
 
 ```bash
 # 1. Bump version in package.json first
@@ -698,15 +737,17 @@ npm publish --access public
 
 See [PUBLISHING.md](PUBLISHING.md) for the full release checklist.
 
----
+<br/>
 
-## License
+## 📄 License
 
 MIT © [Zakir Jarir](https://github.com/zakirjarir/zbiolock)
 
----
+<br/>
 
-<p align="center">
-  Built with ❤️ for the Capacitor community.<br/>
-  Secure by design. Enterprise by standard.
-</p>
+<div align="center">
+
+Built with ❤️ for the Capacitor community.
+**Secure by design. Enterprise by standard.**
+
+</div>
