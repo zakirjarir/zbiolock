@@ -1,0 +1,127 @@
+name: ZBioLock CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ─────────────────────────────────────
+  # TypeScript Build & Lint
+  # ─────────────────────────────────────
+  web:
+    name: TypeScript Build & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run eslint
+
+      - name: Run Prettier check
+        run: npm run prettier -- --check
+
+      - name: TypeScript type-check
+        run: npx tsc --noEmit
+
+      - name: Build plugin
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-dist
+          path: dist/
+
+  # ─────────────────────────────────────
+  # Android Build & Test
+  # ─────────────────────────────────────
+  android:
+    name: Android Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Node.js (for capacitor-android dependency)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Android build
+        run: cd android && ./gradlew clean assembleRelease
+
+      - name: Android unit tests
+        run: cd android && ./gradlew test
+
+  # ─────────────────────────────────────
+  # iOS Build & Test (macOS runner)
+  # ─────────────────────────────────────
+  ios:
+    name: iOS Build & Test
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: iOS Swift Package build & test
+        run: |
+          xcodebuild test \
+            -scheme ZBioLockPlugin \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-results
+          path: TestResults.xcresult
+
+  # ─────────────────────────────────────
+  # Release gate — all checks must pass
+  # ─────────────────────────────────────
+  validate:
+    name: All checks passed
+    runs-on: ubuntu-latest
+    needs: [web, android, ios]
+    steps:
+      - name: All checks green ✅
+        run: echo "All CI jobs passed. Plugin is ready for release."

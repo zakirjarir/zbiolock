@@ -1,25 +1,275 @@
 <!doctype html>
-<html lang="en" dir="ltr" class="hydrated">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Example Capacitor App</title>
+    <title>ZBioLock – Demo App</title>
     <meta
       name="viewport"
       content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="description" content="ZBioLock biometric plugin demonstration app." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg:        #0a0e1a;
+        --surface:   #111827;
+        --card:      #1a2235;
+        --border:    #2a3a55;
+        --accent:    #6366f1;
+        --accent2:   #8b5cf6;
+        --success:   #10b981;
+        --danger:    #ef4444;
+        --warn:      #f59e0b;
+        --text:      #e2e8f0;
+        --muted:     #64748b;
+        --radius:    14px;
+        --glow:      0 0 30px rgba(99,102,241,.25);
+      }
+
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 16px 48px;
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99,102,241,.12), transparent),
+          radial-gradient(ellipse 50% 30% at 80% 80%, rgba(139,92,246,.08), transparent);
+      }
+
+      /* ---- Header ---- */
+      .app-header {
+        text-align: center;
+        margin-bottom: 32px;
+        animation: fadeIn .5s ease;
+      }
+      .app-header .logo {
+        width: 64px; height: 64px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border-radius: 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 30px;
+        margin: 0 auto 16px;
+        box-shadow: var(--glow);
+      }
+      .app-header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -.5px; }
+      .app-header p  { color: var(--muted); font-size: .875rem; margin-top: 4px; }
+
+      /* ---- Status badge ---- */
+      .status-bar {
+        display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+        margin-bottom: 24px;
+      }
+      .badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 999px;
+        font-size: .75rem; font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--card);
+        transition: all .3s;
+      }
+      .badge.ok    { border-color: var(--success); color: var(--success); }
+      .badge.warn  { border-color: var(--warn);    color: var(--warn);    }
+      .badge.error { border-color: var(--danger);  color: var(--danger);  }
+      .badge .dot  { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+      /* ---- Cards ---- */
+      .grid { display: grid; gap: 16px; width: 100%; max-width: 600px; }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+        animation: slideUp .4s ease both;
+      }
+      .card h2 {
+        font-size: .95rem; font-weight: 600; margin-bottom: 14px;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .card h2 .icon { font-size: 1.1rem; }
+
+      /* ---- Form elements ---- */
+      .field { margin-bottom: 12px; }
+      label  { font-size: .75rem; color: var(--muted); display: block; margin-bottom: 5px; font-weight: 500; }
+      input[type="text"], input[type="password"] {
+        width: 100%;
+        padding: 10px 14px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text);
+        font-size: .875rem;
+        font-family: inherit;
+        transition: border-color .2s;
+        outline: none;
+      }
+      input:focus { border-color: var(--accent); }
+
+      /* ---- Buttons ---- */
+      .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+      button {
+        padding: 10px 18px;
+        border: none; border-radius: 8px;
+        font-family: inherit; font-size: .85rem; font-weight: 600;
+        cursor: pointer; transition: all .2s; outline: none;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(99,102,241,.3);
+      }
+      .btn-primary:hover  { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,.4); }
+      .btn-primary:active { transform: translateY(0);    box-shadow: 0 2px 8px  rgba(99,102,241,.3); }
+
+      .btn-secondary {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .btn-secondary:hover { background: var(--border); }
+
+      .btn-danger {
+        background: rgba(239,68,68,.15);
+        color: var(--danger);
+        border: 1px solid rgba(239,68,68,.3);
+      }
+      .btn-danger:hover { background: rgba(239,68,68,.25); }
+
+      /* ---- Log ---- */
+      .log-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        min-height: 80px; max-height: 200px;
+        overflow-y: auto;
+        font-size: .78rem; font-family: 'Courier New', monospace;
+        color: var(--muted);
+        scrollbar-width: thin;
+      }
+      .log-wrap .entry      { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+      .log-wrap .entry.ok   { color: var(--success); }
+      .log-wrap .entry.err  { color: var(--danger);  }
+      .log-wrap .entry.info { color: var(--accent);  }
+
+      /* ---- Result chip ---- */
+      .result-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 10px; border-radius: 6px; font-size: .78rem; font-weight: 600;
+        margin-top: 8px;
+      }
+      .result-chip.ok  { background: rgba(16,185,129,.12); color: var(--success); }
+      .result-chip.err { background: rgba(239,68,68,.12);  color: var(--danger);  }
+
+      /* ---- Animations ---- */
+      @keyframes fadeIn   { from { opacity: 0 } to { opacity: 1 } }
+      @keyframes slideUp  { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: none } }
+      .card:nth-child(1) { animation-delay: .05s }
+      .card:nth-child(2) { animation-delay: .10s }
+      .card:nth-child(3) { animation-delay: .15s }
+      .card:nth-child(4) { animation-delay: .20s }
+      .card:nth-child(5) { animation-delay: .25s }
+    </style>
   </head>
   <body>
-    <main>
-      <h1>Capacitor Test Plugin Project</h1>
-      <p>
-        This project can be used to test out the functionality of your plugin. Nothing in the
-        <em>example-app/</em> folder will be published to npm when using this template, so you can create away!
-      </p>
-      <label for="echoInput">Echo Text:</label>
-      <input type="text" id="echoInput" name="echoInput" value="Hello World!" />
-      <button onclick="testEcho()">Click Me!</button>
-    </main>
+
+    <header class="app-header">
+      <div class="logo">🔐</div>
+      <h1>ZBioLock</h1>
+      <p>Enterprise Biometric Plugin Demo</p>
+    </header>
+
+    <div class="status-bar">
+      <div id="badge-available" class="badge">
+        <span class="dot"></span><span id="label-available">Checking…</span>
+      </div>
+      <div id="badge-type" class="badge">
+        <span class="dot"></span><span id="label-type">—</span>
+      </div>
+      <div id="badge-enrolled" class="badge">
+        <span class="dot"></span><span id="label-enrolled">—</span>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <!-- Availability card -->
+      <div class="card">
+        <h2><span class="icon">🛡️</span> Availability</h2>
+        <div class="btn-group">
+          <button id="btn-check" class="btn-primary" onclick="checkAvailability()">Check Availability</button>
+          <button id="btn-enrolled" class="btn-secondary" onclick="checkEnrolled()">Is Enrolled?</button>
+          <button id="btn-type" class="btn-secondary" onclick="checkType()">Biometric Type</button>
+        </div>
+        <div id="result-availability" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Authentication card -->
+      <div class="card">
+        <h2><span class="icon">👁️</span> Authentication</h2>
+        <div class="field">
+          <label for="auth-title">Dialog Title</label>
+          <input type="text" id="auth-title" value="Verify Identity" />
+        </div>
+        <div class="field">
+          <label for="auth-desc">Description</label>
+          <input type="text" id="auth-desc" value="Place your finger or look at the camera" />
+        </div>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="doAuthenticate(false)">🔑 Authenticate</button>
+          <button class="btn-secondary" onclick="doAuthenticate(true)">🔑 + PIN Fallback</button>
+        </div>
+        <div id="result-auth" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Save Token card -->
+      <div class="card">
+        <h2><span class="icon">💾</span> Save Token</h2>
+        <div class="field">
+          <label for="save-key">Key</label>
+          <input type="text" id="save-key" value="access_token" />
+        </div>
+        <div class="field">
+          <label for="save-token">Token Value</label>
+          <input type="text" id="save-token" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example" />
+        </div>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="doSaveToken()">Save Token</button>
+        </div>
+        <div id="result-save" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Get / Delete Token card -->
+      <div class="card">
+        <h2><span class="icon">🗝️</span> Read &amp; Delete Token</h2>
+        <div class="field">
+          <label for="get-key">Key</label>
+          <input type="text" id="get-key" value="access_token" />
+        </div>
+        <div class="btn-group">
+          <button class="btn-primary"   onclick="doGetToken()">Read Token</button>
+          <button class="btn-danger"    onclick="doDeleteToken()">Delete Token</button>
+          <button class="btn-secondary" onclick="doClear()">Clear All</button>
+        </div>
+        <div id="result-get" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Console card -->
+      <div class="card">
+        <h2><span class="icon">📋</span> Activity Log</h2>
+        <div id="log" class="log-wrap"><div class="entry info">&gt; ZBioLock demo ready. Run checks above.</div></div>
+      </div>
+
+    </div>
 
     <script src="./js/example.js" type="module"></script>
   </body>

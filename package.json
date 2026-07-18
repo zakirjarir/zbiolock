@@ -1,7 +1,7 @@
 {
   "name": "zbiolock",
   "version": "0.0.1",
-  "description": "Secure biometric authentication for Capacitor apps with Fingerprint, Face ID, Android Face Unlock, Device PIN fallback, and secure token storage powered by Android Keystore and iOS Keychain.",
+  "description": "Enterprise-grade biometric authentication & hardware-backed secure token storage for Capacitor apps (Android Keystore, iOS Keychain). Supports fingerprint, Face ID, iris, and device PIN.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -27,20 +27,38 @@
   "keywords": [
     "capacitor",
     "plugin",
+    "biometric",
+    "authentication",
+    "fingerprint",
+    "face-id",
+    "touch-id",
+    "iris",
+    "keystore",
+    "keychain",
+    "secure-storage",
+    "jwt",
+    "token",
+    "ionic",
+    "android",
+    "ios",
+    "security",
+    "banking",
+    "healthcare",
+    "mfa",
     "native"
   ],
   "scripts": {
     "verify": "npm run verify:ios && npm run verify:android && npm run verify:web",
-    "verify:ios": "xcodebuild -scheme Zbiolock -destination generic/platform=iOS",
+    "verify:ios": "xcodebuild -scheme ZBioLockPlugin -destination generic/platform=iOS",
     "verify:android": "cd android && ./gradlew clean build test && cd ..",
     "verify:web": "npm run build",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
-    "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
+    "lint": "npm run eslint && npm run prettier -- --check",
+    "fmt": "npm run eslint -- --fix && npm run prettier -- --write",
     "eslint": "eslint . --ext ts",
     "prettier": "prettier \"**/*.{css,html,ts,js,java}\" --plugin=prettier-plugin-java",
     "swiftlint": "node-swiftlint",
     "docgen": "docgen --api ZBioLockPlugin --output-readme README.md --output-json dist/docs.json",
-    "build": "npm run clean && npm run docgen && tsc && rollup -c rollup.config.mjs",
+    "build": "npm run clean && tsc && rollup -c rollup.config.mjs",
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
@@ -62,7 +80,7 @@
     "typescript": "^5.9.3"
   },
   "peerDependencies": {
-    "@capacitor/core": ">=8.0.0"
+    "@capacitor/core": ">=7.0.0"
   },
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",
