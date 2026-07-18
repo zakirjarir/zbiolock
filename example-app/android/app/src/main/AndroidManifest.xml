@@ -41,11 +41,12 @@
 
     <!--
         ZBioLock: Required for biometric authentication (API 28+).
-        On devices running Android 9 and below this is auto-downgraded
-        to USE_FINGERPRINT by the system, but declaring USE_BIOMETRIC
-        here ensures correct behaviour on all API levels.
+        On devices running Android 9 and below (API 28 and older), the system
+        requires USE_FINGERPRINT for compatibility. Declaring both permissions
+        ensures biometric authentication works across all Android versions.
     -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <!--
         ZBioLock: Optional feature hints.

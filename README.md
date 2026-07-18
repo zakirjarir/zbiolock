@@ -71,6 +71,7 @@ Designed from the ground up for applications where security is **non-negotiable*
 - [Capacitor Sync](#-capacitor-sync)
 - [Android Setup](#-android-setup)
 - [iOS Setup](#-ios-setup)
+- [Quick Start Flow](#-quick-start-flow)
 
 </td>
 <td valign="top" width="33%">
@@ -137,7 +138,7 @@ class MainActivity : BridgeActivity() {
 ### 2️⃣ AndroidManifest.xml — Required Changes
 
 > [!IMPORTANT]
-> You **must** add the `USE_BIOMETRIC` permission to your **app's** `AndroidManifest.xml`. Although the plugin's own AAR manifest declares this permission, Android Gradle sometimes does not auto-merge it reliably across all project configurations. Adding it explicitly is always safe and is the recommended practice.
+> You **must** add both the `USE_BIOMETRIC` and `USE_FINGERPRINT` permissions to your **app's** `AndroidManifest.xml`. Although the plugin's own AAR manifest declares these, Android Gradle sometimes does not auto-merge them reliably across all project configurations. Adding them explicitly is always safe and recommended.
 
 Open `android/app/src/main/AndroidManifest.xml` and add the following **inside the `<manifest>` tag, outside the `<application>` block**:
 
@@ -153,12 +154,11 @@ Open `android/app/src/main/AndroidManifest.xml` and add the following **inside t
     <!--  ZBioLock — Biometric Permissions                -->
     <!-- ─────────────────────────────────────────────── -->
 
-    <!--
-        REQUIRED: Grants access to the BiometricPrompt API (Android 9+, API 28+).
-        On Android 8 or below, the system automatically down-grades this
-        to USE_FINGERPRINT — no extra work needed.
-    -->
+    <!-- REQUIRED: Grants access to the BiometricPrompt API (Android 9+, API 28+). -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <!-- REQUIRED: Required for backward compatibility on Android 9 and older devices (API 28 and older). -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <!--
         OPTIONAL — Hardware feature hints for the Play Store.
@@ -176,7 +176,8 @@ Open `android/app/src/main/AndroidManifest.xml` and add the following **inside t
 
 | Entry | Required? | Purpose |
 |:--|:--:|:--|
-| `USE_BIOMETRIC` | ✅ **Yes** | Grants runtime access to `BiometricPrompt` |
+| `USE_BIOMETRIC` | ✅ **Yes** | Grants runtime access to modern `BiometricPrompt` |
+| `USE_FINGERPRINT` | ✅ **Yes** | Grants access to older fingerprint APIs (Android 9 & below) |
 | `android.hardware.fingerprint` | No | Hints fingerprint usage to Play Store |
 | `android.hardware.biometrics.face` | No | Hints Face Unlock usage to Play Store |
 | `android.hardware.biometrics.iris` | No | Hints iris scanner usage to Play Store |
@@ -237,6 +238,126 @@ ZBioLock targets **iOS 15+**. Verify your Podfile:
 
 ```ruby
 platform :ios, '15.0'
+```
+
+<br/>
+
+## 🚀 Quick Start Flow
+
+This section shows the standard flow of how and when to use each function of the plugin in your application.
+
+```mermaid
+graph TD
+    A[App Startup] --> B{Token exists in Secure Storage?}
+    B -- Yes --> C[Auto-login User]
+    B -- No --> D[Normal Username/Password Login]
+    D --> E[Login Success]
+    E --> F{Biometrics Available?}
+    F -- Yes --> G[Prompt 'Enable Biometrics?']
+    G -- User Agrees --> H[Authenticate Biometric]
+    H -- Success --> I[saveToken: Save Secure Session Token]
+    F -- No --> J[Proceed without Biometrics]
+```
+
+### 1️⃣ Check if Biometrics/Device Lock is Available
+Always check if the device supports biometric hardware or passcode verification before showing options to the user.
+
+```typescript
+import { ZBioLock } from 'zbiolock';
+
+const checkStatus = async () => {
+  const result = await ZBioLock.isAvailable({
+    allowDeviceCredential: true // set true to allow PIN/Pattern fallback if biometrics are not set up
+  });
+
+  if (result.isAvailable) {
+    console.log(`Device supports biometrics! Type: ${result.biometricType}`);
+    // e.g. biometricType: 'fingerprint' | 'face' | 'device_credential'
+  } else {
+    console.log('Biometric authentication is not supported or set up on this device.');
+  }
+};
+```
+
+### 2️⃣ Prompt for Biometric Authentication
+Show the native OS biometric prompt when the user tries to unlock the app or authenticate a transaction.
+
+```typescript
+const promptBiometrics = async () => {
+  try {
+    const result = await ZBioLock.authenticate({
+      title: 'Sign In to Account',
+      subtitle: 'Verify your fingerprint or face',
+      description: 'Confirm identity to proceed',
+      allowDeviceCredential: true, // Allow fallback to PIN/Pattern/Password
+      cancelText: 'Cancel' // Customize cancel button (Android only)
+    });
+
+    if (result.success) {
+      console.log('Authentication successful!');
+    }
+  } catch (error: any) {
+    // Check error codes (e.g. user canceled, locked out, etc.)
+    console.error(`Auth failed [Code: ${error.code}]: ${error.message}`);
+  }
+};
+```
+
+### 3️⃣ Save Token Securely (On Login Success)
+Once the user performs a successful standard login (or enables biometrics), save the auth/session token to the hardware-backed secure storage.
+
+```typescript
+const saveSession = async (token: string) => {
+  try {
+    await ZBioLock.saveToken({
+      key: 'my_auth_token',
+      token: token // Your raw JWT or session token string
+    });
+    console.log('Session token saved securely in Keystore/Keychain!');
+  } catch (error) {
+    console.error('Failed to save token:', error);
+  }
+};
+```
+
+### 4️⃣ Auto-login Retrieval (On App Launch)
+When the app starts, check if a session token is already securely stored. If found, automatically log the user in.
+
+```typescript
+const attemptAutoLogin = async () => {
+  try {
+    // 1. Get the token
+    const result = await ZBioLock.getToken({ key: 'my_auth_token' });
+    
+    if (result.token) {
+      console.log('Found secure session token! Authenticating user automatically...');
+      // Use result.token for your API requests
+      return result.token;
+    } else {
+      console.log('No saved session token found.');
+    }
+  } catch (error) {
+    console.error('Failed to retrieve token:', error);
+  }
+  return null;
+};
+```
+
+### 5️⃣ Clear Storage (On Logout)
+Wipe all securely saved tokens when the user manually logs out of the application to prevent unauthorized access.
+
+```typescript
+const handleLogout = async () => {
+  try {
+    await ZBioLock.clear(); // Wipes all keys/tokens
+    // Or wipe a specific token key:
+    // await ZBioLock.deleteToken({ key: 'my_auth_token' });
+    
+    console.log('Secure storage cleared successfully.');
+  } catch (error) {
+    console.error('Error during logout:', error);
+  }
+};
 ```
 
 <br/>

@@ -5,6 +5,7 @@
         On older devices the library falls back to USE_FINGERPRINT automatically.
     -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <!--
         Declared as a hint so the OS knows this app can utilize biometric hardware.
