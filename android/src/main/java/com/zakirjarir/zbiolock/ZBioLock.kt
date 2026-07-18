@@ -50,15 +50,29 @@ class ZBioLock(private val context: Context) {
 
     fun isAvailable(allowDeviceCredential: Boolean): Boolean {
         val biometricManager = BiometricManager.from(context)
-        val authenticators = if (allowDeviceCredential) {
-            Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
-        } else {
-            Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK
-        }
         
-        val canAuth = biometricManager.canAuthenticate(authenticators)
-        return canAuth == BiometricManager.BIOMETRIC_SUCCESS || 
-               canAuth == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+        if (allowDeviceCredential && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Android 11+ supports strong/weak biometrics + device credential
+            val authenticators = Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
+            val canAuth = biometricManager.canAuthenticate(authenticators)
+            return canAuth == BiometricManager.BIOMETRIC_SUCCESS || 
+                   canAuth == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+        } else if (allowDeviceCredential && Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            // Android 10 (API 29): Query biometrics and check Keyguard separately to avoid combination crashes
+            val canBio = biometricManager.canAuthenticate(Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK)
+            val keyguardManager = context.getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            val isSecure = keyguardManager?.isDeviceSecure == true
+            return canBio == BiometricManager.BIOMETRIC_SUCCESS || 
+                   canBio == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED || 
+                   isSecure
+        } else {
+            // Android 9 and below: DEVICE_CREDENTIAL is not supported by BiometricManager/BiometricPrompt.
+            // Check only biometric hardware.
+            val authenticators = Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK
+            val canAuth = biometricManager.canAuthenticate(authenticators)
+            return canAuth == BiometricManager.BIOMETRIC_SUCCESS || 
+                   canAuth == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+        }
     }
 
     fun isBiometricEnrolled(): Boolean {

@@ -28,7 +28,7 @@ export class ZBioLockWeb extends WebPlugin implements ZBioLockPlugin {
    * On the web, biometrics are never available.
    * Returns isAvailable: false without throwing.
    */
-  async isAvailable(): Promise<IsAvailableResult> {
+  async isAvailable(_options?: { allowDeviceCredential?: boolean }): Promise<IsAvailableResult> {
     return { isAvailable: false, biometricType: 'none' };
   }
 

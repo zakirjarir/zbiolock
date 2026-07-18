@@ -54,11 +54,11 @@ class ZBioLockPlugin : Plugin() {
         val token = call.getString("token")
 
         if (key == null) {
-            call.reject("INVALID_ARGUMENT", "Key must be provided")
+            call.reject("Key must be provided", "INVALID_ARGUMENT")
             return
         }
         if (token == null) {
-            call.reject("INVALID_ARGUMENT", "Token must be provided")
+            call.reject("Token must be provided", "INVALID_ARGUMENT")
             return
         }
 
@@ -66,7 +66,7 @@ class ZBioLockPlugin : Plugin() {
             implementation.saveToken(key, token)
             call.resolve()
         } catch (e: Exception) {
-            call.reject("UNKNOWN_ERROR", e.localizedMessage, e)
+            call.reject(e.localizedMessage, "UNKNOWN_ERROR", e)
         }
     }
 
@@ -75,7 +75,7 @@ class ZBioLockPlugin : Plugin() {
         val key = call.getString("key")
 
         if (key == null) {
-            call.reject("INVALID_ARGUMENT", "Key must be provided")
+            call.reject("Key must be provided", "INVALID_ARGUMENT")
             return
         }
 
@@ -85,7 +85,7 @@ class ZBioLockPlugin : Plugin() {
             ret.put("token", token)
             call.resolve(ret)
         } catch (e: Exception) {
-            call.reject("UNKNOWN_ERROR", e.localizedMessage, e)
+            call.reject(e.localizedMessage, "UNKNOWN_ERROR", e)
         }
     }
 
@@ -94,7 +94,7 @@ class ZBioLockPlugin : Plugin() {
         val key = call.getString("key")
 
         if (key == null) {
-            call.reject("INVALID_ARGUMENT", "Key must be provided")
+            call.reject("Key must be provided", "INVALID_ARGUMENT")
             return
         }
 
@@ -102,7 +102,7 @@ class ZBioLockPlugin : Plugin() {
             implementation.deleteToken(key)
             call.resolve()
         } catch (e: Exception) {
-            call.reject("UNKNOWN_ERROR", e.localizedMessage, e)
+            call.reject(e.localizedMessage, "UNKNOWN_ERROR", e)
         }
     }
 
@@ -112,7 +112,7 @@ class ZBioLockPlugin : Plugin() {
             implementation.clear()
             call.resolve()
         } catch (e: Exception) {
-            call.reject("UNKNOWN_ERROR", e.localizedMessage, e)
+            call.reject(e.localizedMessage, "UNKNOWN_ERROR", e)
         }
     }
 
@@ -127,13 +127,13 @@ class ZBioLockPlugin : Plugin() {
 
         // Check availability first
         if (!implementation.isAvailable(allowDeviceCredential)) {
-            call.reject("BIOMETRIC_NOT_AVAILABLE", "Biometrics or device passcode not available")
+            call.reject("Biometrics or device passcode not available", "BIOMETRIC_NOT_AVAILABLE")
             return
         }
 
         val activity = activity as? FragmentActivity
         if (activity == null) {
-            call.reject("DEVICE_NOT_SUPPORTED", "Activity is not a FragmentActivity")
+            call.reject("Activity is not a FragmentActivity", "DEVICE_NOT_SUPPORTED")
             return
         }
 
@@ -152,10 +152,20 @@ class ZBioLockPlugin : Plugin() {
                     promptInfoBuilder.setDescription(description)
                 }
 
-                if (allowDeviceCredential) {
+                if (allowDeviceCredential && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                     promptInfoBuilder.setAllowedAuthenticators(
                         Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK or Authenticators.DEVICE_CREDENTIAL
                     )
+                } else if (allowDeviceCredential && android.os.Build.VERSION.SDK_INT == android.os.Build.VERSION_CODES.Q) {
+                    val isBiometricEnrolled = implementation.isBiometricEnrolled()
+                    if (isBiometricEnrolled) {
+                        promptInfoBuilder.setAllowedAuthenticators(
+                            Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK
+                        )
+                        promptInfoBuilder.setNegativeButtonText(call.getString("cancelText") ?: "Cancel")
+                    } else {
+                        promptInfoBuilder.setAllowedAuthenticators(Authenticators.DEVICE_CREDENTIAL)
+                    }
                 } else {
                     promptInfoBuilder.setAllowedAuthenticators(
                         Authenticators.BIOMETRIC_STRONG or Authenticators.BIOMETRIC_WEAK
@@ -169,7 +179,7 @@ class ZBioLockPlugin : Plugin() {
                     override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                         super.onAuthenticationError(errorCode, errString)
                         val code = mapAndroidError(errorCode)
-                        call.reject(code, errString.toString())
+                        call.reject(errString.toString(), code)
                     }
 
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -189,7 +199,7 @@ class ZBioLockPlugin : Plugin() {
 
                 biometricPrompt.authenticate(promptInfo)
             } catch (e: Exception) {
-                call.reject("UNKNOWN_ERROR", e.localizedMessage, e)
+                call.reject(e.localizedMessage, "UNKNOWN_ERROR", e)
             }
         }
     }
