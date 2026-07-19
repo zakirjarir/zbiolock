@@ -14,23 +14,12 @@
   <img src="https://img.shields.io/badge/iOS-000000.svg?style=flat-square&logo=apple&logoColor=white" alt="iOS" />
   <img src="https://img.shields.io/badge/Web-safe%20fallback-6c757d.svg?style=flat-square" alt="Web" />
   <img src="https://github.com/zakirjarir/zbiolock/actions/workflows/ci.yml/badge.svg" alt="CI" />
-  <img src="https://img.shields.io/badge/Status-In%20Development-orange.svg?style=flat-square" alt="Status" />
+  <img src="https://img.shields.io/badge/Status-Stable-brightgreen.svg?style=flat-square" alt="Status" />
 </p>
 
 **Hardware-backed biometric auth & token storage — built for banking, healthcare & government apps.**
 
 </div>
-
-<br/>
-
-> [!WARNING]
-> ### 🚧 Active Development — Not Yet Production-Ready
-> - The API may change without notice between versions
-> - Not yet verified on physical devices across all Android/iOS versions
-> - **Not recommended** for live/production applications at this stage
-> - Breaking changes may occur before the `v1.0.0` stable release
->
-> **Use in production at your own risk.** ⭐ Watch this repo for stable release announcements.
 
 <br/>
 
@@ -824,6 +813,13 @@ Not at this time. ZBioLock is a Capacitor-native plugin. A React Native port is 
 <br/>
 
 ## 📝 Changelog
+
+### `v1.0.0` — Production Release
+
+- 🚀 Production-ready stable release of the biometric authentication and token storage plugin
+- 🛠 Fixed Android unit tests compilation and run issues under local JVM/Robolectric environments
+- 🧹 Resolved all TypeScript/ESLint warnings about unused parameters (`_options`)
+- 🔒 Validated Android Keystore and iOS Keychain encryption architectures
 
 ### `v0.0.1` — Initial Release
 

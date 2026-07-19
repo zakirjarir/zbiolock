@@ -9,42 +9,49 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import android.app.KeyguardManager
 
-class ZBioLock(private val context: Context) {
+class ZBioLock @JvmOverloads constructor(
+    private val context: Context,
+    private val prefs: android.content.SharedPreferences? = null
+) {
 
     private val securePrefsFile = "zbiolock_secure_prefs"
 
     private val sharedPreferences by lazy {
-        try {
-            val masterKey = MasterKey.Builder(context)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build()
-
-            EncryptedSharedPreferences.create(
-                context,
-                securePrefsFile,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
-        } catch (e: Exception) {
-            // Attempt recovery if SharedPreferences/Keystore is corrupted
+        if (prefs != null) {
+            prefs
+        } else {
             try {
-                context.deleteSharedPreferences(securePrefsFile)
-            } catch (ex: Exception) {
-                // Ignore failure to delete
-            }
-            
-            val masterKey = MasterKey.Builder(context)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build()
+                val masterKey = MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
 
-            EncryptedSharedPreferences.create(
-                context,
-                securePrefsFile,
-                masterKey,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
+                EncryptedSharedPreferences.create(
+                    context,
+                    securePrefsFile,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            } catch (e: Exception) {
+                // Attempt recovery if SharedPreferences/Keystore is corrupted
+                try {
+                    context.deleteSharedPreferences(securePrefsFile)
+                } catch (ex: Exception) {
+                    // Ignore failure to delete
+                }
+                
+                val masterKey = MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build()
+
+                EncryptedSharedPreferences.create(
+                    context,
+                    securePrefsFile,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                )
+            }
         }
     }
 

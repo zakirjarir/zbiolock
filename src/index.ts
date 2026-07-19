@@ -11,6 +11,7 @@
 import { registerPlugin } from '@capacitor/core';
 
 import type { ZBioLockPlugin } from './definitions';
+
 export type {
   ZBioLockPlugin,
   BiometricType,
@@ -27,7 +28,7 @@ export type {
 } from './definitions';
 
 const ZBioLock = registerPlugin<ZBioLockPlugin>('ZBioLock', {
-  web: () => import('./web').then(m => new m.ZBioLockWeb()),
+  web: () => import('./web').then((m) => new m.ZBioLockWeb()),
 });
 
 export { ZBioLock };

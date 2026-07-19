@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Zbiolock'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'Secure biometric authentication & token storage for Capacitor.'
   s.homepage         = 'https://github.com/zakirjarir/zbiolock'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }

@@ -81,7 +81,9 @@ export interface ZBioLockPlugin {
      * Check whether biometric (or device credential) authentication is supported
      * and available on this device.
      */
-    isAvailable(): Promise<IsAvailableResult>;
+    isAvailable(options?: {
+        allowDeviceCredential?: boolean;
+    }): Promise<IsAvailableResult>;
     /**
      * Prompt the user to authenticate using their enrolled biometric or
      * device credential (if allowDeviceCredential is true).

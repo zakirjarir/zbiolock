@@ -1,6 +1,6 @@
 {
   "name": "zbiolock",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Enterprise-grade biometric authentication & hardware-backed secure token storage for Capacitor apps (Android Keystore, iOS Keychain). Supports fingerprint, Face ID, iris, and device PIN.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
@@ -85,7 +85,10 @@
   "prettier": "@ionic/prettier-config",
   "swiftlint": "@ionic/swiftlint-config",
   "eslintConfig": {
-    "extends": "@ionic/eslint-config/recommended"
+    "extends": "@ionic/eslint-config/recommended",
+    "rules": {
+      "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+    }
   },
   "capacitor": {
     "ios": {

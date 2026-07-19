@@ -10,6 +10,7 @@
  */
 
 import { WebPlugin } from '@capacitor/core';
+
 import type {
   ZBioLockPlugin,
   IsAvailableResult,
@@ -37,9 +38,7 @@ export class ZBioLockWeb extends WebPlugin implements ZBioLockPlugin {
    * Throws a meaningful DEVICE_NOT_SUPPORTED error.
    */
   async authenticate(_options?: AuthenticateOptions): Promise<AuthenticateResult> {
-    throw this.unavailable(
-      'Biometric authentication is not available on the web platform.',
-    );
+    throw this.unavailable('Biometric authentication is not available on the web platform.');
   }
 
   /**
@@ -57,27 +56,21 @@ export class ZBioLockWeb extends WebPlugin implements ZBioLockPlugin {
    * Secure storage retrieval not available on the web.
    */
   async getToken(_options: GetTokenOptions): Promise<GetTokenResult> {
-    throw this.unavailable(
-      'Secure token retrieval is not available on the web platform.',
-    );
+    throw this.unavailable('Secure token retrieval is not available on the web platform.');
   }
 
   /**
    * Secure storage deletion not available on the web.
    */
   async deleteToken(_options: DeleteTokenOptions): Promise<void> {
-    throw this.unavailable(
-      'Secure token deletion is not available on the web platform.',
-    );
+    throw this.unavailable('Secure token deletion is not available on the web platform.');
   }
 
   /**
    * Secure storage clear not available on the web.
    */
   async clear(): Promise<void> {
-    throw this.unavailable(
-      'Secure storage clear is not available on the web platform.',
-    );
+    throw this.unavailable('Secure storage clear is not available on the web platform.');
   }
 
   /**

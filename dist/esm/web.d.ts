@@ -15,7 +15,9 @@ export declare class ZBioLockWeb extends WebPlugin implements ZBioLockPlugin {
      * On the web, biometrics are never available.
      * Returns isAvailable: false without throwing.
      */
-    isAvailable(): Promise<IsAvailableResult>;
+    isAvailable(_options?: {
+        allowDeviceCredential?: boolean;
+    }): Promise<IsAvailableResult>;
     /**
      * Authentication is not possible on the web platform.
      * Throws a meaningful DEVICE_NOT_SUPPORTED error.

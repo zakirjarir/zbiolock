@@ -11,7 +11,7 @@ var capacitorZBioLock = (function (exports, core) {
      * @license MIT
      */
     const ZBioLock = core.registerPlugin('ZBioLock', {
-        web: () => Promise.resolve().then(function () { return web; }).then(m => new m.ZBioLockWeb()),
+        web: () => Promise.resolve().then(function () { return web; }).then((m) => new m.ZBioLockWeb()),
     });
 
     /**
@@ -29,7 +29,7 @@ var capacitorZBioLock = (function (exports, core) {
          * On the web, biometrics are never available.
          * Returns isAvailable: false without throwing.
          */
-        async isAvailable() {
+        async isAvailable(_options) {
             return { isAvailable: false, biometricType: 'none' };
         }
         /**

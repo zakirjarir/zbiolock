@@ -14,7 +14,7 @@ export class ZBioLockWeb extends WebPlugin {
      * On the web, biometrics are never available.
      * Returns isAvailable: false without throwing.
      */
-    async isAvailable() {
+    async isAvailable(_options) {
         return { isAvailable: false, biometricType: 'none' };
     }
     /**

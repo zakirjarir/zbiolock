@@ -13,13 +13,7 @@
 // ---------------------------------------------------------------------------
 
 /** Standardized biometric hardware type identifier. */
-export type BiometricType =
-  | 'fingerprint'
-  | 'face'
-  | 'iris'
-  | 'device_credential'
-  | 'unknown'
-  | 'none';
+export type BiometricType = 'fingerprint' | 'face' | 'iris' | 'device_credential' | 'unknown' | 'none';
 
 // ---------------------------------------------------------------------------
 // Error Codes

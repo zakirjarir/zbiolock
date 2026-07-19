@@ -1,10 +1,14 @@
 package com.zakirjarir.zbiolock
 
 import android.content.Context
+import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
 /**
  * Unit tests for ZBioLock core Kotlin implementation.
@@ -14,6 +18,8 @@ import org.junit.Test
  * - Token CRUD operations using EncryptedSharedPreferences
  * - clear() wipes all tokens
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.R], manifest = Config.NONE)
 class ZBioLockTest {
 
     private lateinit var context: Context
@@ -22,7 +28,8 @@ class ZBioLockTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        zbiolock = ZBioLock(context)
+        val plainPrefs = context.getSharedPreferences("test_secure_prefs", Context.MODE_PRIVATE)
+        zbiolock = ZBioLock(context, plainPrefs)
         // Start with clean slate
         zbiolock.clear()
     }
